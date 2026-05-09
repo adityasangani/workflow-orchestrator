@@ -10,5 +10,6 @@ public class Task {
     private String name;
     private TaskStatus taskStatus;
     private List<String> dependencies;
+
     
 }
