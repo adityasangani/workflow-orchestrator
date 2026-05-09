@@ -9,7 +9,7 @@ import com.adityasangani.orchestrator.model.Workflow;
 @Component
 public class DependencyResolver {
     
-    // in workflow it finds all pending tasks and changes them to ready state if their dependencies are complete
+    // in workflow if dependencies complete, make task ready
     public void updatePendingToReadyTasks(Workflow workflow){
         for(Task task : workflow.getTasks()){
             if(task.getTaskStatus()!=TaskStatus.PENDING){
