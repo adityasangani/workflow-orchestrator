@@ -5,17 +5,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.springframework.stereotype.Component;
 
-import com.adityasangani.orchestrator.model.Task;
+import com.adityasangani.orchestrator.model.TaskContext;
 
 @Component
 public class TaskQueue {
-    private final BlockingQueue<Task> queue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<TaskContext> queue = new LinkedBlockingQueue<>();
 
-    public void submit(Task task){
-        queue.offer(task);
+    public void submit(TaskContext taskContext){
+        queue.offer(taskContext);
     }
 
-    public Task take() throws InterruptedException{
+    public TaskContext take() throws InterruptedException{
         return queue.take();
     }
 

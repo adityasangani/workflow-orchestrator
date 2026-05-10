@@ -1,10 +1,13 @@
 package com.adityasangani.orchestrator.service;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.adityasangani.orchestrator.model.Task;
+import com.adityasangani.orchestrator.model.TaskContext;
 import com.adityasangani.orchestrator.model.TaskStatus;
 import com.adityasangani.orchestrator.model.Workflow;
 import com.adityasangani.orchestrator.model.WorkflowStatus;
@@ -32,7 +35,7 @@ public class WorkflowService {
         workflow.getTasks().forEach(task -> {
             if(task.getDependencies() == null || task.getDependencies().isEmpty()){
                 task.setTaskStatus(TaskStatus.READY);
-                taskQueue.submit(task);
+                taskQueue.submit(new TaskContext(workflow, task));
             } else{
                 task.setTaskStatus(TaskStatus.PENDING);
             }
@@ -59,7 +62,10 @@ public class WorkflowService {
             .findFirst()
             .ifPresent(t -> t.setTaskStatus(TaskStatus.COMPLETED));
 
-        dependencyResolver.updatePendingToReadyTasks(workflow);
+        List<Task> newlyReadyTasks = dependencyResolver.updatePendingToReadyTasks(workflow);
+        for(Task readyTask : newlyReadyTasks){
+            taskQueue.submit(new TaskContext(workflow, readyTask));
+        }
         return workflow;
 
     }
